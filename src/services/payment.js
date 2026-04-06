@@ -4,15 +4,19 @@ const Subscription = require('../models/Subscription');
 const TokenService = require('./token');
 const Progression = require('../models/Progression');
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Initialize Stripe (lazy - only fails when actually used)
+const stripe = process.env.STRIPE_SECRET_KEY && !process.env.STRIPE_SECRET_KEY.includes('pendiente')
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
+  : null;
 
 // Initialize PayPal
-paypal.configure({
-  mode: process.env.PAYPAL_MODE || 'sandbox',
-  client_id: process.env.PAYPAL_CLIENT_ID,
-  client_secret: process.env.PAYPAL_CLIENT_SECRET,
-});
+if (process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_ID !== 'xxxxx') {
+  paypal.configure({
+    mode: process.env.PAYPAL_MODE || 'sandbox',
+    client_id: process.env.PAYPAL_CLIENT_ID,
+    client_secret: process.env.PAYPAL_CLIENT_SECRET,
+  });
+}
 
 const TIER_CONFIG = {
   basic: {

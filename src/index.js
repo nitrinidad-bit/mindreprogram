@@ -62,10 +62,16 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`MindReprogram API running on port ${PORT}`);
 
-  // Start Telegram bot
-  if (process.env.TELEGRAM_BOT_TOKEN) {
-    startBot();
-    console.log('Telegram bot started.');
+  // Start Telegram bot (skip if token is not configured)
+  if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_BOT_TOKEN !== 'pendiente') {
+    try {
+      startBot();
+      console.log('Telegram bot started.');
+    } catch (err) {
+      console.error('Failed to start Telegram bot:', err.message);
+    }
+  } else {
+    console.log('Telegram bot skipped (token not configured).');
   }
 
   // Start notification scheduler
