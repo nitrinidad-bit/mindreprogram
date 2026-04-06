@@ -1,9 +1,5 @@
 [build]
-command= "npm install"
-builder = "NIXPACKS"
+command = "npm install"
 
 [deploy]
 startCommand = "node src/index.js"
-healthcheckPath = "/health"
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 3
